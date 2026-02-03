@@ -80,5 +80,19 @@ Delete user by id
 curl -X DELETE http://localhost:3000/users/1 
 ```
 
+## Authentication (JWT)
+
+- **Required header**: the middleware expects an `Authorization` header with the format `Bearer <token>`.
+- **Error responses**: if the header is missing or malformed the server returns `401` with `{ "error": "Missing or malformed Authorization header" }`; if the token is invalid the server returns `401` with `{ "error": "Invalid token" }`.
+- **On success**: the decoded JWT payload is attached to `req.user` for downstream handlers.
+- **Secret**: the middleware currently uses a hardcoded secret `"johnny"` in `src/middleware/jwt.middleware.ts`. For production, set `JWT_SECRET` via environment variables.
+- **Example** (calling a protected create user route):
+```bash
+curl -X POST http://localhost:3000/users \
+  -H "Authorization: Bearer <token>" \
+  -H "Content-Type: application/json" \
+  -d '{"name":"John","score":5}'
+```
+
 ## Contributing
 - Create a feature branch, implement changes, and open a pull request against `main`.

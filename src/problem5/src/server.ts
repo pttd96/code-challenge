@@ -1,8 +1,12 @@
 import express from "express";
 import userRoutes from "./controller/user.controller.js";
+import jwtMiddleware from "./middleware/jwt.middleware.js";
 
 const app = express();
 app.use(express.json());
+
+// JWT validation middleware (set JWT_SECRET env var to change secret)
+app.use(jwtMiddleware);
 
 app.use("/users", userRoutes);
 
