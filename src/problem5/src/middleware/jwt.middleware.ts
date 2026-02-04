@@ -10,13 +10,14 @@ export function jwtMiddleware(req: Request, res: Response, next: NextFunction) {
   }
 
   const token = auth.slice(7);
-
+  console.log("Token:", JWT_SECRET);
   try {
     const payload = jwt.verify(token, JWT_SECRET);
     (req as any).user = payload;
+    console.log("Payload:", payload);
     return next();
   } catch (err) {
-    return res.status(401).json({ error: "Invalid token" });
+    return res.status(401).json({ error: "Invalid token. Please login again." });
   }
 }
 

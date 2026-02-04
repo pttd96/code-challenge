@@ -39,47 +39,6 @@ npm run dev
 
 - The server may accept a `PORT` environment variable. Check `src/server.ts` for defaults.
 
-## Testing the API
-
-When the server is running, use `curl`, HTTPie, or Postman to call the routes defined in `src/user.routes.ts`.
-
-Examples (replace port if different):
-
-Fetch all users
-```bash
-curl http://localhost:3000/users
-```
-
-Get user by id
-```bash
-curl -X GET http://localhost:3000/users/1
-```
-
-Get user by filter (name or score or both)
-```bash
-curl -X GET http://localhost:3000/users? \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Johnny",
-    "score": 10
-  }'
-```
-
-Create user
-```bash
-curl -X POST http://localhost:3000/users \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Johnny",
-    "score": 10
-  }'
-```
-
-Delete user by id
-```bash
-curl -X DELETE http://localhost:3000/users/1 
-```
-
 ## Authentication (JWT)
 
 - **Required header**: the middleware expects an `Authorization` header with the format `Bearer <token>`.
@@ -92,6 +51,68 @@ curl -X POST http://localhost:3000/users \
   -H "Authorization: Bearer <token>" \
   -H "Content-Type: application/json" \
   -d '{"name":"John","score":5}'
+```
+
+## Testing the API
+
+When the server is running, use `curl`, HTTPie, or Postman to call the routes defined in `controller/user.controller.ts`.
+
+Examples (replace port if different):
+
+First of all, login to get jwt token. The token is currently hardcoded.
+```bash
+curl -X GET http://localhost:3000/login
+```
+Response:
+`{"jwtToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjY5LCJ1c2VybmFtZSI6InRlc3R1c2VyIiwiaWF0IjoxNzcwMTc0OTM0fQ.rjyrqs47vsphRvy0XF-nyzBCuxU9n6TIF-9uEjNBtMU"}`
+
+Add the token into header for subsequence API calls.
+
+Fetch all users
+```bash
+curl -X GET http://localhost:3000/users \
+-H "Authorization: Bearer <jwtToken>"
+```
+
+Get by filter
+Query params: name (name of user), score (score of user), and limit (number of records to return)
+```bash
+curl -X GET http://localhost:3000/users?name=Johnny \
+  -H "Authorization: Bearer <jwtToken>" 
+```
+
+Get user by id
+```bash
+curl -X GET http://localhost:3000/users/{id} \
+-H "Authorization: Bearer <jwtToken>"
+```
+
+Create user
+```bash
+curl -X POST  http://localhost:3000/users \
+ -H "Authorization: Bearer <jwtToken>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Johnny",
+    "score": 10
+  }'
+```
+
+Update user by id
+```bash
+curl -X PUT  http://localhost:3000/users/{id} \
+ -H "Authorization: Bearer <jwtToken>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Johnny",
+    "score": 8
+  }'
+```
+
+Delete user by id
+```bash
+curl -X DELETE http://localhost:3000/users/1 \
+ -H "Authorization: Bearer <jwtToken>"
 ```
 
 ## Contributing

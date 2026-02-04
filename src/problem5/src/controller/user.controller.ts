@@ -6,7 +6,7 @@ import jwtMiddleware from "../middleware/jwt.middleware.js";
 const router = Router();
 
 // Create
-router.post("/", jwtMiddleware, (req: Request, res: Response) => {
+router.post("/", (req: Request, res: Response) => {
   const { name, score } = req.body;
 
   if (!name) {
@@ -40,7 +40,7 @@ router.get("/:id", (req: Request, res: Response) => {
 });
 
 // Update
-router.put("/:id", jwtMiddleware, (req: Request, res: Response) => {
+router.put("/:id", (req: Request, res: Response) => {
     const { name, score } = req.body;
     const userId = Number(req.params.id);
     const updatedUser = userService.updateUser(userId, name, score);
@@ -53,7 +53,7 @@ router.put("/:id", jwtMiddleware, (req: Request, res: Response) => {
 });
 
 // Delete
-router.delete("/:id", jwtMiddleware, (req: Request, res: Response) => {
+router.delete("/:id", (req: Request, res: Response) => {
     const userId = Number(req.params.id);
     const userDeleted = userService.deleteUser(userId);
 
